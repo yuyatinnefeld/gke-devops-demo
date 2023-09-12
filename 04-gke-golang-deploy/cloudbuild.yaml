@@ -1,0 +1,24 @@
+steps:
+######### GOLAGN APP #########
+
+# 01 Build container image
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-golang-app'
+  args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/golang-app:1.0.0', './app/app_1']
+
+# 02 Push container image
+- name: "gcr.io/cloud-builders/docker"
+  id: 'push-golang-app'
+  args: ["push", "europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/golang-app:1.0.0"]
+
+# 03 Deploy GKE
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  id: 'deploy-golang-app'
+  args:
+  - run
+  - --filename=app/gke-golang.yaml
+  - --image=europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/golang-app:1.0.0
+  - --location=europe-west1-b
+  - --cluster=gke-devops-project
+  - --namespace=gcp-deployment-dev
+  dir: './'  # Set the working directory to the root of your project

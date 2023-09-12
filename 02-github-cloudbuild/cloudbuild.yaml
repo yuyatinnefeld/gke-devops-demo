@@ -1,0 +1,8 @@
+steps:
+
+######### PYTHON APP #########
+
+# 01 Build container image
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-python-app'
+  args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/python-app:1.0.0', './app/app_1']

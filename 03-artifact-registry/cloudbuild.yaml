@@ -1,0 +1,12 @@
+steps:
+######### GOLAGN APP #########
+
+# 01 Build container image
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-golang-app'
+  args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/golang-app:1.0.0', './app/app_1']
+
+# 02 Push container image
+- name: "gcr.io/cloud-builders/docker"
+  id: 'push-golang-app'
+  args: ["push", "europe-west1-docker.pkg.dev/$PROJECT_ID/docker-repo/golang-app:1.0.0"]

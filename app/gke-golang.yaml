@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcp-deployment
+  labels:
+    app: gcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gcp
+  template:
+    metadata:
+      labels:
+        app: gcp
+    spec:
+      containers:
+      - name: golang-app
+        image: "europe-west1-docker.pkg.dev/yuyatinnefeld-dev/docker-repo/golang-app:1.0.0"
+        ports:
+        - containerPort: 8888
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gcp-python-service
+  namespace: gcp-deployment-dev
+  labels:   
+    app.kubernetes.io/managed-by: "gcp-cloud-build-deployment"
+spec:
+  selector:
+    app: gcp
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+      name: http-gcp
+  type: LoadBalancer
